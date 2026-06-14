@@ -1,32 +1,37 @@
 class Solution:
     def minimumMoves(self, nums: list[int], k: int, maxChanges: int) -> int:
-        ones = [i for i, x in enumerate(nums) if x == 1]
-        n = len(ones)
-        pref = [0] * (n + 1)
-        for i in range(n):
-            pref[i + 1] = pref[i] + ones[i]
-
+        pos = [i for i, x in enumerate(nums) if x == 1]
+        n = len(pos)
+        
+        p_sum = [0] * (n + 1)
+        for i, p in enumerate(pos):
+            p_sum[i+1] = p_sum[i] + p
+            
         ans = float('inf')
         
-        for i in range(n):
-            # Try picking up ones adjacent to ones[i]
-            # We can pick up ones[i-1], ones[i], ones[i+1] if they exist
-            # But let's look at the standard approach for distant ones via changes
-            pass
-
-        # Alternatively using sliding window / binary search on ranges:
-        # Focusing on local contiguous ones first
-        for i in range(len(nums)):
-            # Check range around i...
-            pass
+        min_existing = max(0, k - maxChanges)
+        max_existing = min(k, n, min_existing + 3)
+        
+        for size in range(min_existing, max_existing + 1):
+            rem = k - size
             
-        # Standard implementation creates prefix sum array over positions of 1s
-        # and uses binary search to find the minimum radius to cover remaining required 1s.
-        # Below is a simplified functional equivalent structure for the check:
-        
-        # Simplified placeholder/reference logic:
-        # Find closest ones to any potential center
-        # For full implementation detail, one queries the prefix array `pref` 
-        # of the mapped positions of 1s.
-        
-        return 0 # Placeholder for brevity of complex window matching
+            base_cost = rem * 2
+            
+            if size == 0:
+                ans = min(ans, base_cost)
+                continue
+                
+            for i in range(n - size + 1):
+                mid = i + size // 2
+                
+                left_count = mid - i
+                right_count = (i + size - 1) - mid
+                
+                left_sum = p_sum[mid] - p_sum[i]
+                right_sum = p_sum[i + size] - p_sum[mid + 1]
+                
+                cost = (pos[mid] * left_count - left_sum) + (right_sum - pos[mid] * right_count)
+                
+                ans = min(ans, cost + base_cost)
+                
+        return ans
