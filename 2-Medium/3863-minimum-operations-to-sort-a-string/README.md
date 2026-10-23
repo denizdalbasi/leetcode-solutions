@@ -6,4 +6,5 @@
 
 ### Approach Analysis
 
-This solution checks how many times you need to change the string that it is not decending order
+This solution checks how many times you need to change the string that it is not decending order.  
+To find the minimum number fulliwing the string division rules as since the fist letter or last letter being in their soesific position 
